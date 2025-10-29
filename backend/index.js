@@ -1,10 +1,11 @@
 import express from "express";
 import mongoose from "mongoose";
 import "dotenv/config";
+import cors from "cors";
 
-import { registerValidation, loginValidation } from "./validations.js";
-import { handleValidationErrors } from "./utils/index.js";
-import { UserController } from "./controllers/index.js";
+import { registerValidation, loginValidation, taskValidation } from "./validations.js";
+import { handleValidationErrors, checkAuth } from "./utils/index.js";
+import { UserController,TaskController } from "./controllers/index.js";
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -17,6 +18,7 @@ mongoose
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.post(
   "/auth/register",
@@ -32,9 +34,18 @@ app.post(
 );
 
 
-app.get("/", (req, res) => {
-  res.send("Server OK");
-});
+app.post(
+    "/tasks", 
+    checkAuth,               
+    taskValidation,          
+    handleValidationErrors,  
+    TaskController.create   
+); 
+app.get("/tasks", checkAuth, TaskController.getAll); 
+app.post("/tasks/:id/solve", checkAuth, TaskController.solve); 
+app.post("/tasks/:id/cancel", checkAuth, TaskController.cancel);
+
+
 
 app.listen(4444, (err) => {
   if (err) {
