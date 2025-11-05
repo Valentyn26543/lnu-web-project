@@ -1,11 +1,22 @@
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)); // ЦЕ ДЛЯ СЕБЕ, НЕ ЗАБУТИ ПРИБРАТИ
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export const solveSLAE = async (matrixA, vectorB, taskId, TaskModel) => {
+export const solveSLAE = async (matrixA, vectorB, taskId, TaskModel, io) => {
   const N = matrixA.length;
   const augmentedMatrix = matrixA.map((row, i) => [...row, vectorB[i]]);
   const progressSteps = [];
 
   for (let i = 0; i < N; i++) {
+    const current = await TaskModel.findById(taskId);
+    if (!current || current.status === "rejected") {
+      console.log(`Розв’язання зупинено: task ${taskId} відхилена.`);
+      io.emit("taskUpdated", {
+        _id: taskId,
+        status: "rejected",
+        progress: current?.progress || 100,
+      });
+      return { solutionVector: [], progressSteps };
+    }
+
     let maxRow = i;
     for (let k = i + 1; k < N; k++) {
       if (
@@ -14,6 +25,7 @@ export const solveSLAE = async (matrixA, vectorB, taskId, TaskModel) => {
         maxRow = k;
       }
     }
+
     [augmentedMatrix[i], augmentedMatrix[maxRow]] = [
       augmentedMatrix[maxRow],
       augmentedMatrix[i],
@@ -21,7 +33,7 @@ export const solveSLAE = async (matrixA, vectorB, taskId, TaskModel) => {
 
     if (augmentedMatrix[i][i] === 0) {
       throw new Error(
-        "Система є сингулярною або має нескінченну/відсутню кількість розв'язків"
+        "Система є сингулярною або має нескінченну/відсутню кількість розв’язків"
       );
     }
 
@@ -32,11 +44,13 @@ export const solveSLAE = async (matrixA, vectorB, taskId, TaskModel) => {
       progress: progress,
     });
 
-    if (taskId && TaskModel) {
-      await TaskModel.updateOne({ _id: taskId }, { progress: progress });
-    }
+    await TaskModel.updateOne(
+      { _id: taskId },
+      { progress, status: "in_progress" }
+    );
+    io.emit("taskUpdated", { _id: taskId, status: "in_progress", progress });
 
-    await sleep(2000); // ЦЕ ДЛЯ СЕБЕ, НЕ ЗАБУТИ ПРИБРАТИ
+    await sleep(1000);
 
     for (let k = i + 1; k < N; k++) {
       const factor = augmentedMatrix[k][i] / augmentedMatrix[i][i];
@@ -47,7 +61,21 @@ export const solveSLAE = async (matrixA, vectorB, taskId, TaskModel) => {
   }
 
   const solutionVector = new Array(N);
+
   for (let i = N - 1; i >= 0; i--) {
+    const current = await TaskModel.findById(taskId);
+    if (!current || current.status === "rejected") {
+      console.log(
+        `Розв’язання зупинено: task ${taskId} відхилена (на етапі back-substitution).`
+      );
+      io.emit("taskUpdated", {
+        _id: taskId,
+        status: "rejected",
+        progress: current?.progress || 100,
+      });
+      return { solutionVector: [], progressSteps };
+    }
+
     let sum = 0;
     for (let j = i + 1; j < N; j++) {
       sum += augmentedMatrix[i][j] * solutionVector[j];
@@ -62,14 +90,11 @@ export const solveSLAE = async (matrixA, vectorB, taskId, TaskModel) => {
       progress: progress,
     });
 
-    if (taskId && TaskModel) {
-      await TaskModel.updateOne({ _id: taskId }, { progress: progress });
-    }
+    await TaskModel.updateOne({ _id: taskId }, { progress });
+    io.emit("taskUpdated", { _id: taskId, status: "in_progress", progress });
 
-    await sleep(2000); // ЦЕ ДЛЯ СЕБЕ, НЕ ЗАБУТИ ПРИБРАТИ
+    await sleep(1000);
   }
-
-  progressSteps.push({ stage: "completed", step: N, progress: 100 });
 
   return { solutionVector, progressSteps };
 };

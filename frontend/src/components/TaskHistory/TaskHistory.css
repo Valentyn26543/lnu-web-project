@@ -1,0 +1,38 @@
+.task-history {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  margin-top: 24px;
+}
+
+.task-history h2 {
+  font-size: 22px;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.loading {
+  margin-top: 20px;
+  font-size: 18px;
+}
+
+.alert-info {
+  background: #e9f4ff;
+  border: 1px solid #b3daff;
+  color: #064d7c;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.solution {
+  font-size: 14px;
+  color: #666;
+  margin-top: 8px;
+}

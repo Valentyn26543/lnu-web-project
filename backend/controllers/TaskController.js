@@ -41,6 +41,8 @@ export const solve = async (req, res) => {
       return res.status(403).json({ message: "Немає доступу." });
     }
 
+    const io = req.app.get("io");
+
     task.status = "in_progress";
     task.progress = 5;
     await task.save();
@@ -49,13 +51,21 @@ export const solve = async (req, res) => {
       task.matrixA,
       task.vectorB,
       taskId,
-      TaskModel
+      TaskModel,
+      io
     );
+
+    const latest = await TaskModel.findById(taskId);
+    if (latest.status === "rejected") {
+      return res.json({ message: "Задача скасована користувачем." });
+    }
 
     task.status = "completed";
     task.progress = 100;
     task.solutionVector = solutionVector;
     await task.save();
+
+    io.emit("taskUpdated", task);
 
     res.json({
       task,
@@ -68,7 +78,7 @@ export const solve = async (req, res) => {
     );
 
     res.status(500).json({
-      message: `Помилка розв'язання}`,
+      message: "Помилка розв'язання",
     });
   }
 };
@@ -86,6 +96,8 @@ export const cancel = async (req, res) => {
         message: "Помилка скасування",
       });
     }
+
+    req.app.get("io").emit("taskUpdated", updatedTask.toObject());
 
     res.json(updatedTask);
   } catch (error) {
@@ -105,6 +117,32 @@ export const getAll = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Помилка отримання тасок",
+    });
+  }
+};
+
+export const getOne = async (req, res) => {
+  try {
+    const taskId = req.params.id;
+    const task = await TaskModel.findById(taskId);
+
+    if (!task) {
+      return res.status(404).json({
+        message: "Завдання не знайдено",
+      });
+    }
+
+    if (task.user.toString() !== req.userId) {
+      return res.status(403).json({
+        message: "Немає доступу. Завдання належить іншому користувачеві.",
+      });
+    }
+
+    res.json(task);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Неможливо отримати завдання",
     });
   }
 };

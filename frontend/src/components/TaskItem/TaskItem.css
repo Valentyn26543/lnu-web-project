@@ -1,0 +1,123 @@
+.task-item {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+}
+
+.task-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  text-transform: capitalize;
+}
+
+.status-created {
+  background: #ddd;
+  color: #333;
+}
+
+.status-progress {
+  background: #007bff;
+  color: #fff;
+}
+
+.status-completed {
+  background: #4caf50;
+  color: #fff;
+}
+
+.status-failed {
+  background: #f44336;
+  color: #fff;
+}
+
+.meta {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 6px 0;
+}
+
+.solve-btn {
+  background: #1976d2;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 8px;
+}
+
+.solve-btn:hover {
+  background: #125aa3;
+}
+
+.progress-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.progress-container {
+  flex: 1;
+  background-color: #eee;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 20px;
+}
+
+.progress-bar {
+  background-color: #2196f3;
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.4s ease;
+}
+
+.progress-text {
+  font-weight: 500;
+  color: #333;
+  min-width: 40px;
+  text-align: right;
+}
+
+.solution {
+  margin-top: 10px;
+  color: #2e7d32;
+  font-size: 0.95rem;
+}
+
+.error {
+  color: #d32f2f;
+  font-size: 0.9rem;
+  margin-top: 8px;
+}
+
+.cancel-btn {
+  margin-top: 10px;
+  padding: 6px 12px;
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background-color: #c9302c;
+}

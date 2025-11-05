@@ -1,0 +1,80 @@
+.matrix-input {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  margin-top: 24px;
+}
+
+.matrix-input h2 {
+  margin-bottom: 16px;
+  color: #222;
+}
+
+.error-box {
+  background: #ffeaea;
+  border: 1px solid #ffb4b4;
+  color: #b10000;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.matrix-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.small {
+  flex: 0.4;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #444;
+}
+
+textarea {
+  resize: none;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #008e36;
+  box-shadow: 0 0 3px rgba(0, 142, 54, 0.3);
+}
+
+.btn-primary {
+  background-color: #008e36;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.btn-primary:hover {
+  background-color: #00732c;
+}
