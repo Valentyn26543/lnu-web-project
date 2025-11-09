@@ -73,8 +73,53 @@ textarea:focus {
   border-radius: 6px;
   cursor: pointer;
   align-self: flex-start;
+  transition: background-color 0.2s;
 }
 
 .btn-primary:hover {
   background-color: #00732c;
+}
+
+.random-generator {
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  margin-bottom: 20px;
+}
+
+.random-generator label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.generator-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.size-input {
+  width: 80px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.btn-secondary {
+  background-color: #005696;
+  color: #fff;
+  padding: 8px 15px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: #00447a;
 }

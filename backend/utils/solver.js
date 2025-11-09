@@ -1,5 +1,3 @@
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 export const solveSLAE = async (matrixA, vectorB, taskId, TaskModel, io) => {
   const N = matrixA.length;
   const augmentedMatrix = matrixA.map((row, i) => [...row, vectorB[i]]);
@@ -50,8 +48,6 @@ export const solveSLAE = async (matrixA, vectorB, taskId, TaskModel, io) => {
     );
     io.emit("taskUpdated", { _id: taskId, status: "in_progress", progress });
 
-    await sleep(1000);
-
     for (let k = i + 1; k < N; k++) {
       const factor = augmentedMatrix[k][i] / augmentedMatrix[i][i];
       for (let j = i; j < N + 1; j++) {
@@ -92,8 +88,6 @@ export const solveSLAE = async (matrixA, vectorB, taskId, TaskModel, io) => {
 
     await TaskModel.updateOne({ _id: taskId }, { progress });
     io.emit("taskUpdated", { _id: taskId, status: "in_progress", progress });
-
-    await sleep(1000);
   }
 
   return { solutionVector, progressSteps };

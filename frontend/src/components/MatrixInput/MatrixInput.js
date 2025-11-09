@@ -26,6 +26,41 @@ const MatrixInput = () => {
   const [matrixInput, setMatrixInput] = useState("1 2 3\n4 5 6\n7 8 9");
   const [vectorInput, setVectorInput] = useState("6\n15\n24");
   const [error, setError] = useState("");
+  const [randomSize, setRandomSize] = useState(4);
+
+  const generateRandomMatrix = (N) => {
+    let matrix = [];
+    for (let i = 0; i < N; i++) {
+      let row = [];
+      for (let j = 0; j < N; j++) {
+        row.push(Math.floor(Math.random() * 10) + 1);
+      }
+      matrix.push(row.join(" "));
+    }
+    return matrix.join("\n");
+  };
+
+  const generateRandomVector = (N) => {
+    let vector = [];
+    for (let i = 0; i < N; i++) {
+      vector.push(Math.floor(Math.random() * 10) + 1);
+    }
+    return vector.join("\n");
+  };
+
+  const handleGenerateRandom = () => {
+    const N = parseInt(randomSize);
+    if (isNaN(N) || N < 2 || N > 200) {
+      return setError("Розмір матриці має бути числом від 2 до 200.");
+    }
+
+    const newMatrix = generateRandomMatrix(N);
+    const newVector = generateRandomVector(N);
+
+    setMatrixInput(newMatrix);
+    setVectorInput(newVector);
+    setError("");
+  };
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -54,11 +89,18 @@ const MatrixInput = () => {
       );
     }
 
+    const title = `Завдання ${N}x${N} (${new Date().toLocaleTimeString()})`;
+
     let currentTaskId = null;
 
     try {
       const createAction = dispatch(
-        fetchCreateTask({ matrixA: parsedMatrix, vectorB: parsedVector })
+        fetchCreateTask({
+          title: title,
+          matrixA: parsedMatrix,
+          vectorB: parsedVector,
+          serverId: "SERVER_1", // тимчасово
+        })
       );
       const newTask = await createAction.unwrap();
 
@@ -73,7 +115,6 @@ const MatrixInput = () => {
       );
 
       dispatch(fetchSolveTask(currentTaskId));
-
     } catch (err) {
       const errorMessage = err.message || JSON.stringify(err);
       setError(`Помилка: ${errorMessage}`);
@@ -83,9 +124,30 @@ const MatrixInput = () => {
   return (
     <div className="matrix-input">
       <h2>Нове завдання (СЛАР)</h2>
-
       {error && <div className="error-box">{error}</div>}
-
+      <div className="random-generator">
+        <label htmlFor="randomSize">
+          Генерувати випадкову матрицю N x N (N: 2-200)
+        </label>
+        <div className="generator-controls">
+          <input
+            id="randomSize"
+            type="number"
+            value={randomSize}
+            onChange={(e) => setRandomSize(e.target.value)}
+            min="2"
+            max="200"
+            className="size-input"
+          />
+          <button
+            type="button"
+            onClick={handleGenerateRandom}
+            className="btn-secondary"
+          >
+            Згенерувати
+          </button>
+        </div>
+      </div>
       <form onSubmit={onSubmit} className="matrix-form">
         <div className="form-row">
           <div className="form-group">
@@ -97,7 +159,6 @@ const MatrixInput = () => {
               rows={5}
             />
           </div>
-
           <div className="form-group small">
             <label>Вектор B</label>
             <textarea
@@ -108,9 +169,8 @@ const MatrixInput = () => {
             />
           </div>
         </div>
-
         <button type="submit" className="btn-primary">
-          Створити та Розв'язати
+          Створити та Розв'язати 
         </button>
       </form>
     </div>
