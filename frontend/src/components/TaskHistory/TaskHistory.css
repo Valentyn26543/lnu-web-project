@@ -8,7 +8,7 @@
 
 .task-history h2 {
   font-size: 22px;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   color: #333;
 }
 
@@ -35,4 +35,87 @@
   font-size: 14px;
   color: #666;
   margin-top: 8px;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 700px;
+  width: 90%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.modal h3 {
+  margin-top: 0;
+}
+
+.modal button {
+  margin-top: 16px;
+  padding: 8px 14px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.modal button:hover {
+  background: #0056b3;
+}
+
+.matrix-container {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.matrix-block,
+.vector-block {
+  flex: 1;
+}
+
+.matrix-scroll {
+  max-height: 200px;
+  max-width: 500px;
+  overflow: auto;
+  background: #f7f7f7;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.matrix-table {
+  border-collapse: collapse;
+  width: 100%;
+  text-align: center;
+}
+
+.matrix-table td {
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  min-width: 35px;
+}
+
+.matrix-table tr:nth-child(even) {
+  background: #f0f0f0;
+}
+
+/* Адаптивність */
+@media (max-width: 600px) {
+  .matrix-container {
+    flex-direction: column;
+  }
 }

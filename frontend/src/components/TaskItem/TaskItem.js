@@ -25,6 +25,16 @@ const TaskItem = ({ task, onSolve, onCancel }) => {
     return <p className="solution">Розв’язок: {text}</p>;
   };
 
+  const handleClickSolve = (e) => {
+    e.stopPropagation();
+    onSolve(task._id);
+  };
+
+  const handleClickCancel = (e) => {
+    e.stopPropagation();
+    onCancel(task._id);
+  };
+
   return (
     <div className="task-item">
       <div className="task-header">
@@ -39,7 +49,7 @@ const TaskItem = ({ task, onSolve, onCancel }) => {
       </p>
 
       {task.status === "created" && (
-        <button className="solve-btn" onClick={() => onSolve(task._id)}>
+        <button className="solve-btn" onClick={handleClickSolve}>
           Розв’язати
         </button>
       )}
@@ -54,7 +64,7 @@ const TaskItem = ({ task, onSolve, onCancel }) => {
           </div>
           <p className="progress-text">{task.progress || 0}%</p>
 
-          <button className="cancel-btn" onClick={() => onCancel(task._id)}>
+          <button className="cancel-btn" onClick={handleClickCancel}>
             Завершити завдання
           </button>
         </>
