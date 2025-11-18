@@ -47,6 +47,7 @@ export const solve = async (req, res) => {
     task.progress = 5;
     await task.save();
 
+    console.log("task started:", taskId);
     const { solutionVector, progressSteps } = await solveSLAE(
       task.matrixA,
       task.vectorB,
@@ -64,6 +65,7 @@ export const solve = async (req, res) => {
     task.progress = 100;
     task.solutionVector = solutionVector;
     await task.save();
+    console.log("task completed:", taskId);
 
     io.emit("taskUpdated", task);
 

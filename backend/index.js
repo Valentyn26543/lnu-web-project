@@ -20,7 +20,8 @@ mongoose
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: "*", credentials: true }));
+app.set("trust proxy", 1);
 
 // http сервер поверх express (не замінює app)
 const server = http.createServer(app);
@@ -65,7 +66,9 @@ app.get("/tasks/:id", checkAuth, TaskController.getOne);
 app.post("/tasks/:id/solve", checkAuth, TaskController.solve);
 app.post("/tasks/:id/cancel", checkAuth, TaskController.cancel);
 
-server.listen(4444, (err) => {
+const port = process.env.PORT || 4444;
+
+server.listen(port, (err) => {
   if (err) return console.log(err);
-  console.log("Server OK");
+  console.log(`Server OK (Listening on port ${port})`);
 });
