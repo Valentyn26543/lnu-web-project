@@ -4,6 +4,8 @@ import "dotenv/config";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
+import { createClient } from "redis";
+import { createAdapter } from "@socket.io/redis-adapter";
 
 import {
   registerValidation,
@@ -23,22 +25,40 @@ app.use(express.json());
 app.use(cors({ origin: "*", credentials: true }));
 app.set("trust proxy", 1);
 
-// http сервер поверх express (не замінює app)
 const server = http.createServer(app);
 
-const io = new Server(server, {
-  cors: { origin: "*" },
-});
+const pubClient = createClient({ url: "redis://redis:6379" });
+const subClient = pubClient.duplicate();
 
-io.on("connection", (socket) => {
-  console.log("Клієнт підключився:", socket.id);
+Promise.all([pubClient.connect(), subClient.connect()])
+  .then(() => {
+    const io = new Server(server, {
+      cors: { origin: "*" },
+    });
 
-  socket.on("disconnect", () => {
-    console.log("Клієнт відключився:", socket.id);
+    io.adapter(createAdapter(pubClient, subClient));
+
+    io.on("connection", (socket) => {
+      console.log("Клієнт підключився:", socket.id);
+
+      socket.on("disconnect", () => {
+        console.log("Клієнт відключився:", socket.id);
+      });
+    });
+
+    app.set("io", io);
+
+    const port = 4444;
+
+    server.listen(port, (err) => {
+      if (err) return console.log(err);
+      console.log(`Server OK (Listening on port ${port})`);
+    });
+  })
+  .catch((err) => {
+    console.error("Redis connection failed and server NOT started!", err);
+    process.exit(1);
   });
-});
-
-app.set("io", io);
 
 app.post(
   "/auth/register",
@@ -65,10 +85,3 @@ app.get("/tasks", checkAuth, TaskController.getAll);
 app.get("/tasks/:id", checkAuth, TaskController.getOne);
 app.post("/tasks/:id/solve", checkAuth, TaskController.solve);
 app.post("/tasks/:id/cancel", checkAuth, TaskController.cancel);
-
-const port = process.env.PORT || 4444;
-
-server.listen(port, (err) => {
-  if (err) return console.log(err);
-  console.log(`Server OK (Listening on port ${port})`);
-});

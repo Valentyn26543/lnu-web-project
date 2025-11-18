@@ -44,9 +44,9 @@ const TaskItem = ({ task, onSolve, onCancel }) => {
         </span>
       </div>
 
-      <p className="meta">
+      {/* <p className="meta">
         Сервер: <b>{task.serverId || "N/A"}</b>
-      </p>
+      </p> */}
 
       {task.status === "created" && (
         <button className="solve-btn" onClick={handleClickSolve}>
