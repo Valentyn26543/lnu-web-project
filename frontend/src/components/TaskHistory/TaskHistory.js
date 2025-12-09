@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TaskItem from "../../components/TaskItem/TaskItem.js";
 import socket from "../../socket.js";
@@ -27,22 +27,16 @@ const TaskHistory = () => {
     return () => socket.off("taskUpdated");
   }, [dispatch]);
 
-  const handleSolve = useCallback(
-    (taskId) => {
-      dispatch(
-        updateTaskProgress({ _id: taskId, status: "in_progress", progress: 5 })
-      );
-      dispatch(fetchSolveTask(taskId));
-    },
-    [dispatch]
-  );
+  const handleSolve = (taskId) => {
+    dispatch(
+      updateTaskProgress({ _id: taskId, status: "in_progress", progress: 5 })
+    );
+    dispatch(fetchSolveTask(taskId));
+  };
 
-  const handleCancel = useCallback(
-    (taskId) => {
-      dispatch(fetchCancelTask(taskId));
-    },
-    [dispatch]
-  );
+  const handleCancel = (taskId) => {
+    dispatch(fetchCancelTask(taskId));
+  };
 
   if (tasksStatus === "loading") {
     return <h3 className="loading">Завантаження історії...</h3>;

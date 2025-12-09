@@ -44,10 +44,6 @@ const TaskItem = ({ task, onSolve, onCancel }) => {
         </span>
       </div>
 
-      {/* <p className="meta">
-        Сервер: <b>{task.serverId || "N/A"}</b>
-      </p> */}
-
       {task.status === "created" && (
         <button className="solve-btn" onClick={handleClickSolve}>
           Розв’язати

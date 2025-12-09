@@ -99,7 +99,6 @@ const MatrixInput = () => {
           title: title,
           matrixA: parsedMatrix,
           vectorB: parsedVector,
-          serverId: "SERVER_1", // тимчасово
         })
       );
       const newTask = await createAction.unwrap();

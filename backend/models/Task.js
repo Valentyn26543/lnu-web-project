@@ -21,12 +21,6 @@ const TaskSchema = new mongoose.Schema(
       required: true,
     },
 
-    serverId: {
-      type: String,
-      enum: ["SERVER_1", "SERVER_2"],
-      required: true,
-    },
-
     status: {
       type: String,
       enum: ["created", "in_progress", "completed", "failed", "rejected"],

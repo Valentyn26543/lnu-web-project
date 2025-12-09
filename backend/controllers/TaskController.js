@@ -14,14 +14,12 @@ export const create = async (req, res) => {
       minute: "2-digit",
     })})`;
 
-    const currentServerId = process.env.SERVER_ID || "SERVER_1"; // треба доробити лоад балансер, шоб він навадав SERVER_ID за допопомгою nginx
 
     const doc = new TaskModel({
       user: req.userId,
       title: generatedTitle,
       matrixA: matrixA,
       vectorB: req.body.vectorB,
-      serverId: currentServerId,
     });
 
     const task = await doc.save();

@@ -72,10 +72,6 @@ const authSlice = createSlice({
       state.data = action.payload;
       state.status = "loaded";
     });
-    builder.addCase(fetchAuthMe.rejected, (state) => {
-      state.status = "error";
-      state.data = null;
-    });
 
   },
 });

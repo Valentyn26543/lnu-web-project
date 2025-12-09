@@ -70,9 +70,8 @@ const tasksSlice = createSlice({
       state.items = [];
     });
 
-    // fetchCreateTask
     builder.addCase(fetchCreateTask.fulfilled, (state, action) => {
-      state.items.unshift(action.payload); // додаємо нове завдання на початок списку
+      state.items.unshift(action.payload); 
     });
 
     builder.addCase(fetchTaskStatus.fulfilled, (state, action) => {
